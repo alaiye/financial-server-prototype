@@ -4,6 +4,9 @@ var cors = require("cors");
 const WebSocket = require("ws");
 const server = require("http").createServer(app);
 
+const { processRealtimePrice } = require("./engine");//kumanda merkezi
+processRealtimePrice(1000)
+
 const wss = new WebSocket.Server({ server: server });
 wss.on("connection", function connection(ws) {
   console.log("A new client Connected!");
