@@ -3,16 +3,16 @@ const WebSocket = require("ws");
 const socket = new WebSocket("ws://localhost:3001");
 const Binance = require("binance-api-node").default;
 
-
 const client = Binance();
 // Authenticated client, can make signed calls
 const client2 = Binance({
     apiKey: process.env.APIKEY,
     apiSecret: process.env.APISECRET,
-  //getTime: Date.now(),
+    //getTime: Date.now(),
 });
 client.time().then((time) => console.log(time));
 
+//frontend e gerçek zamanlı data gönderimi için data çekimi
 var wsSocket = new WebSocket(
     "wss://fstream.binance.com/stream?streams=ethusdt@kline_1m" //future
     //"wss://stream.binance.com:9443/ws/ethusdt@kline_5m"
@@ -40,46 +40,46 @@ var wsSocket = new WebSocket(
     //     "B": "123456"       // Ignore
     //   }
     // }
-  );
+);
 
-
-  wsSocket.onmessage = function (event) {
+//frontend e gerçek zamanlı data gönderimi için data gönderimi
+wsSocket.onmessage = function (event) {
     var message = JSON.parse(event.data);
     var resC = message.data;
     var candlestick = resC.k;
     var candlestickS = {
-      //time: Date.now(),
-      time: candlestick.t / 1000,
-      open: candlestick.o,
-      high: candlestick.h,
-      low: candlestick.l,
-      close: candlestick.c,
-      //bollitime: { year: year, month: month, day: date },
-      volume: candlestick.v, //value: candlestick.v, //yazıyordu
-      color:
-        candlestick.o < candlestick.c
-          ? "rgba(0, 150, 136, 0.8)"
-          : "rgba(250, 0, 0, 0.8)",
+        //time: Date.now(),
+        time: candlestick.t / 1000,
+        open: candlestick.o,
+        high: candlestick.h,
+        low: candlestick.l,
+        close: candlestick.c,
+        //bollitime: { year: year, month: month, day: date },
+        volume: candlestick.v, //value: candlestick.v, //yazıyordu
+        color:
+            candlestick.o < candlestick.c
+                ? "rgba(0, 150, 136, 0.8)"
+                : "rgba(250, 0, 0, 0.8)",
     };
     let results = JSON.stringify(candlestickS);
     socket.send(results);
-  };
+};
 
-
-  const allPrices = async () => {
+//binance-api-node modülü üzerinden tüm marjin(future) sembol fiyatlarını elde etmek 
+const allPrices = async () => {
     const results = await client.futuresPrices();
     return results;
-  };
+};
 
-  const candlestick = async (data) => {
+const candlestick = async (data) => {
     //const { symbol, interval } = data;
     //`https://api.binance.com/api/v3/klines?symbol=${data.symbol}&interval=${data.period}`
     const results = await client.futuresCandles({
-      symbol: data.symbol,
-      interval: data.period,
+        symbol: data.symbol,
+        interval: data.period,
     });
     return results;
-  };
+};
 
 // module.exports = { wsSocket, wsSocket2 };
 module.exports = { wsSocket, candlestick, allPrices, client };
