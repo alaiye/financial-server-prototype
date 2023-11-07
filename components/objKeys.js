@@ -1,9 +1,8 @@
+//objelerin anahtarlarının elde edilmesi
+// Obje => name: 'John Doe' -> key:value
+const objKeys = async (objs, filter = "") => {  //filter değeri varsa filter'e sahip keyler seçilir
 
-
-const objKeys = async (objs, filter = "") => {
-    //period ayarları
-
-    const names = Object.keys(objs)
+    const names = Object.keys(objs)             //objs içerisinde key değerleri alındı
         .filter((key) => key.includes(filter))  //veri akışına engel olabilir
         .reduce((obj, key) => {
             return Object.assign(obj, {
@@ -13,10 +12,10 @@ const objKeys = async (objs, filter = "") => {
     let keys = Object.keys(names);
 
     //periods[i]
-    //objs[keys[i]]
+    //objs[keys[i]] 
     return keys
 }
-//let periods = await objKeys(deger);
+//let tümObjeler = await objKeys(degerlerObjesi);
 
 module.exports = { objKeys };
 //objKeys -> ../charting/main.js
