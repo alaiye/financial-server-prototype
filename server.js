@@ -4,7 +4,7 @@ var cors = require("cors");
 const WebSocket = require("ws");
 const server = require("http").createServer(app);
 
-const { processRealtimePrice } = require("./engine");//kumanda merkezi
+const { processRealtimePrice } = require("./engine");// işlem merkezi
 processRealtimePrice(1000)
 
 const wss = new WebSocket.Server({ server: server });

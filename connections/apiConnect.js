@@ -66,10 +66,11 @@ wsSocket.onmessage = function (event) {
 };
 
 //binance-api-node modülü üzerinden tüm marjin(future) sembol fiyatlarını elde etmek 
-const allPrices = async () => {
+const pricesAndSymbols = async () => {
     const results = await client.futuresPrices();
     return results;
 };
+//allPrices -> ../realtime/realTime.js
 
 const candlestick = async (data) => {
     //const { symbol, interval } = data;
@@ -82,4 +83,4 @@ const candlestick = async (data) => {
 };
 
 // module.exports = { wsSocket, wsSocket2 };
-module.exports = { wsSocket, candlestick, allPrices, client };
+module.exports = { wsSocket, candlestick, pricesAndSymbols, client };
