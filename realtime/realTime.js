@@ -1,6 +1,7 @@
 const { pricesAndSymbols } = require("../connections/apiConnect");
 const { objKeys } = require("../components/objKeys")
 const { insertRealTimePrice } = require("./db");
+const { chartingSymbols } = require("../components/chartings")
 
 const priceUpdate = async (date, firstStart) => {
     //her 3 saniyeye 1 kontrol ediliyor
@@ -23,6 +24,7 @@ const priceUpdate = async (date, firstStart) => {
             insertRealTimePrice(data, firstStart)
 
         }
+        chartingSymbols(symbols) // Sembollerin güncelleme(senkronizasyon) newList, deList işlemleri
     }
 }
 
