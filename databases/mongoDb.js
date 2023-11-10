@@ -34,5 +34,43 @@ const realtimesSchema = new Schema({
     versionKey: false // set to false then it wont create in mongodb, __v:0 --> veri tabanına eklenmemesi için
 });
 
+const chartingSchema = new Schema({
+    platform: String,           // Binance, Bitrex vs...
+    section: String,            // Futures(kaldıraçlı) yada Spot 
+    symbols: Array,             // Tüm semboller, modüllerde kullanılmak üzere hazır(sadece enter)
+    selectedSymbols: Array,
+    periods: {
+        minutes:Object,
+        hours:Object,
+        days:Object,
+        weeks:Object,
+        months:Object,
+        years:Object
+    },            // 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M
+    selectedPeriods: {
+        minutes:Object,
+        hours:Object,
+        days:Object,
+        weeks:Object,
+        months:Object,
+        years:Object
+    },            // 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M
+    symbolsInactive: Array,     // Delist edilmiş aktif olmayan semboller
+    nowProcessing: {
+        symbolsQueue: Array,    // İşlenmemiş sembollerin hazır olduğu sembol kuyruğu
+        symbol: String,         // Symbol verilerini toplayıp sonrasında strateji toplama anı
+        symbolsReady: Array
+    },
+    historicalProcessing: {         // İşlenen sembol
+        symbolsQueue: Array,    // İşlenmemiş sembollerin hazır olduğu sembol kuyruğu
+        symbol: String,
+        period: Number,    // 1M vs... sembol periodu
+        symbolsReady: Array     // İşlenmiş sembollerin bulunduğu dizi
+    }
+}, {
+    versionKey: false // set to false then it wont create in mongodb, __v:0 --> veri tabanına eklenmemesi için
+});
+
 const realTimes = mongoose.model('realtimes', realtimesSchema);
-module.exports = { realTimes };
+const charting = mongoose.model('chartings', chartingSchema);
+module.exports = { realTimes, charting };
