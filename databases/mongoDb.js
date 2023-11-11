@@ -71,6 +71,37 @@ const chartingSchema = new Schema({
     versionKey: false // set to false then it wont create in mongodb, __v:0 --> veri tabanına eklenmemesi için
 });
 
+const candleseriesSchema = new Schema({
+    platform: String,       //Binance, Bitrex vs...
+    section: String,        //Spot, Futures(Kaldıraç) vs...
+    symbol: String,         //Sembol adı
+    period: String,         /// 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M
+    candleSerie: {
+        openTime: Number,
+        open: Number,
+        high: Number,
+        low: Number,
+        close: Number,
+        volume: Number,
+        closeTime: Number
+    },
+    indicators: {
+        sma: Number,
+        ema: Number,
+        long: Boolean,
+        short: Boolean,
+        rsi: Number,
+        macd_fast: Number,
+        macd_slow: Number,
+        macd_histogram: Number
+    },
+    oscillators: Object
+}, {
+    versionKey: false // set to false then it wont create in mongodb, __v:0 --> veri tabanına eklenmemesi için
+})
+
 const realTimes = mongoose.model('realtimes', realtimesSchema);
 const charting = mongoose.model('chartings', chartingSchema);
-module.exports = { realTimes, charting };
+const candleSeries = mongoose.model('candleseries', candleseriesSchema);
+
+module.exports = { realTimes, charting, candleSeries };
