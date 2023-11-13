@@ -1,6 +1,7 @@
 const { charting, candleSeries } = require("../databases/mongoDb");
 const { objKeys } = require("../components/objKeys")
 const { client } = require("../connections/apiConnect")
+const { mongoSave } = require("./db");
 
 const chartNowSaver = async (period) => {
 
@@ -51,10 +52,23 @@ const chartingCheckNow = async (time, act) => {
             periods.forEach(async (period, index) => {//for (let j = 0; j < periods.length; j++) { kullanılırsa senkron çalışıyor
                 if (time % period == 0) {
                     console.log(time + " --- " + period + " >>> " + val[period])
-                    //await chartingSave(doc1.platform, doc1.section, symbol, val[period])
+                    await chartingSave(doc1.platform, doc1.section, symbol, val[period])
                 }
             });//}
         }
         console.log("bitti")
     }
 }
+
+const chartingSave = async (platform, section, symbol, period) => {
+    let max = await candleSeries.findOne({ platform: platform, section: section, period: period, symbol: symbol }).sort({ 'candleSerie.openTime': -1 }).limit(1)
+    if (max == null) {
+        const datas = await client.futuresCandles({ symbol: symbol, interval: period, limit: 10 })
+        await mongoSave(platform, section, symbol, period, datas)
+    } else {
+        const datas = await client.futuresCandles({ symbol: symbol, interval: period, startTime: max.candleSerie.openTime, limit: 500 })
+        await mongoSave(platform, section, symbol, period, datas)
+    }
+}
+
+module.exports = { chartNowSaver };
